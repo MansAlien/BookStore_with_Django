@@ -4,9 +4,6 @@
 **Project Description:**
 - We are creating a simple API for a bookstore that manages authors and books. This API will allow the user to perform basic CRUD operations (Create, Read, Update, Delete) on both authors and books. 
 
----
-
-## 2. Design Phase:
 ### Models
 - Author
 - book : where we are gonna link each book with an author (one author can create multiple book)
@@ -29,6 +26,9 @@
     - No authentication or authorization needed we can do it later on.
     - Just use JSON for request and response.
     - we don't need to make the author name uniqe we can handel it with the ID.
+---
+
+## 2. Design Phase:
 
 ---
 
