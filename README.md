@@ -29,9 +29,22 @@
 ---
 
 ## 2. Design Phase:
-1. **Design Phase Diagram**
+1. **Bookstore Diagram**
 ![bookstore Diagram](images/bookstore_diagram.png)
 
----
+2. **Models:**
+    - Author:
+        - id: pk
+        - name: CharField, max_lenght=255
 
-## 3. Coding Phase:
+    - Book:
+        - id: pk
+        - title: CharField, max_lenght=255
+        - publication_year: IntegerField
+        - author: FK, on_delete=CASECADE
+
+2. **Endpoints Map:**
+    - /api/authors/ : List and create authors.
+    - /api/authors/<int:pk>/ : Retrieve, Update, or Delete a specific author.
+    - /api/books/ : List and create authors.
+    - /api/books/<int:pk>/ : Retrieve, Update, or Delete a specific book.
