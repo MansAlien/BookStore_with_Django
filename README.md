@@ -1,7 +1,7 @@
 # BookStore Project 
 
 ## 1. Analysis Phase:
-**Project Description:**
+### Project Description
 - We are creating a simple API for a bookstore that manages authors and books. This API will allow the user to perform basic CRUD operations (Create, Read, Update, Delete) on both authors and books. 
 
 ### Models
@@ -29,6 +29,8 @@
 ---
 
 ## 2. Design Phase:
+1. **Design Phase Diagram**
+![bookstore Diagram](images/bookstore_diagram.png)
 
 ---
 
