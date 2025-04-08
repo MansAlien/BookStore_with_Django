@@ -44,7 +44,6 @@ This project involves creating a simple API for a bookstore. The API allows user
 ### 🖼️ Bookstore Diagram
 Here’s a visual representation of the relationship between the Author and Book models:  
 ![Bookstore Diagram](images/bookstore_diagram.png)  
-*(Replace with your actual diagram image path.)*
 
 ### 🗄️ Models
 - **Author**:
@@ -65,19 +64,3 @@ The API provides the following endpoints for managing authors and books:
 | `/api/authors/<int:pk>/`| GET, PUT, DELETE   | Retrieve, update, or delete an author |
 | `/api/books/`           | GET, POST          | List all books or create a new one    |
 | `/api/books/<int:pk>/`  | GET, PUT, DELETE   | Retrieve, update, or delete a book    |
-
----
-🤝 Contributing
-Contributions are welcome! Fork the repository and submit a pull request. For significant changes, please open an issue first to discuss your ideas.
-
----
-📄 License
-This project is licensed under the MIT License. See the  file for details.
-
----
-### Notes:
-- **Emojis**: I’ve used Unicode emojis (e.g., 📚, 🛠️) as icons. They work well in most Markdown renderers (like GitHub). If you prefer image-based icons, you can replace them with links to images (e.g., `![icon](path/to/icon.png)`).
-- **Customization**: Replace `your-username` in the clone URL with your actual GitHub username or repository URL.
-- **Diagram**: The `images/bookstore_diagram.png` placeholder assumes you’ll create and upload a diagram. If you don’t have one yet, you can remove that line or create a simple diagram (e.g., using tools like Draw.io).
-
-Let me know if you need help with anything else, like generating a diagram or tweaking the README further!
