@@ -1,82 +1,109 @@
 # 📚 BookStore API (Version 1)
 
-A Django + DRF API for managing authors and books, now with **filtering, pagination, nested relationships, and Swagger docs**.  
+Welcome to the enhanced **BookStore API**! This version adds filtering, pagination, nested relationships, and API documentation.  
 
 ---
 
-## 🔥 Features  
-### **Core**  
-✅ **CRUD** for `Author` and `Book` models.  
-✅ **Relationships**: Each book belongs to one author; authors have many books.  
+## 1. Analysis Phase (Version 1 Updates)
 
-### **New in Version 1**  
-🔍 **Search & Filtering**  
-- Filter books by `author__name`, `publication_year` (exact/range).  
-- Filter authors by `name` (case-insensitive partial match).  
+### 📝 Project Description (Updates)
+Extends **Version 0** with:
+- **Filtering/Search**: Find authors/books by name or year.
+- **Pagination**: Split large datasets into pages.
+- **Nested Relationships**: Fetch authors with their books in responses.
+- **Validation**: Stricter rules for titles and publication years.
+- **Documentation**: Interactive Swagger/OpenAPI docs.
 
-📖 **Pagination**  
-- Default: `10 items per page` (customizable).  
+### 🗄️ Models (No Changes)
+Same as Version 0:
+- **Author**: `id`, `name`
+- **Book**: `id`, `title`, `author` (ForeignKey), `publication_year`
 
-🔄 **Nested Responses**  
-- Fetch an author with their books listed in the response.  
+### 📋 New Requirements
+1. **Search & Filtering**  
+   - Books:  
+     - Filter by `author__name` (partial match, case-insensitive).  
+     - Filter by `publication_year` (exact or range, e.g., `year__gte=2000`).  
+   - Authors:  
+     - Search by `name` (partial match, case-insensitive).  
 
-🛡️ **Validation**  
-- `publication_year` cannot be in the future.  
-- `title` must be ≥ 2 characters.  
+2. **Pagination**  
+   - All list endpoints (`/api/authors/`, `/api/books/`) return **10 items per page**.  
 
-📜 **Swagger Documentation**  
-- Interactive API docs at `/swagger/`.  
+3. **Enhanced Validation**  
+   - `publication_year` cannot exceed the current year.  
+   - `title` must be ≥ 2 characters.  
 
----
+4. **Nested Relationships**  
+   - Author details endpoint (`/api/authors/<id>/`) includes a list of their books.  
 
-## 🗄️ Models  
-### **Author**  
-| Field | Type      | Description          |  
-|-------|-----------|----------------------|  
-| `id`  | AutoField | Primary key.         |  
-| `name`| CharField | Author's full name.  |  
+5. **API Documentation**  
+   - Add Swagger/OpenAPI docs at `/swagger/`.  
 
-### **Book**  
-| Field               | Type        | Description                         |  
-|---------------------|-------------|-------------------------------------|  
-| `id`                | AutoField   | Primary key.                        |  
-| `title`             | CharField   | Book title (≥ 2 chars).             |  
-| `author`            | ForeignKey  | Links to `Author` (on_delete=CASCADE). |  
-| `publication_year`  | IntegerField| Year (≤ current year).              |  
-
----
-
-## 🌐 Endpoints  
-### **Authors**  
-| Endpoint                 | Method | Description                          |  
-|--------------------------|--------|--------------------------------------|  
-| `/api/authors/`          | GET    | List all authors (paginated).        |  
-| `/api/authors/`          | POST   | Create a new author.                 |  
-| `/api/authors/<id>/`     | GET    | Get author details + their books.    |  
-| `/api/authors/<id>/`     | PUT    | Update an author.                    |  
-| `/api/authors/<id>/`     | DELETE | Delete an author (and their books).  |  
-
-### **Books**  
-| Endpoint                 | Method | Description                          |  
-|--------------------------|--------|--------------------------------------|  
-| `/api/books/`            | GET    | List all books (paginated/filtered). |  
-| `/api/books/`            | POST   | Create a new book.                   |  
-| `/api/books/<id>/`       | GET    | Get book details.                    |  
-| `/api/books/<id>/`       | PUT    | Update a book.                       |  
-| `/api/books/<id>/`       | DELETE | Delete a book.                       |  
+6. **Error Handling**  
+   - Return consistent error formats (e.g., `404 Not Found` for invalid IDs).  
 
 ---
 
-## 🔍 Filtering & Search  
-### **Authors**  
-- `GET /api/authors/?search=<name>`  
-  - Case-insensitive partial match on `name`.  
+## 2. Design Phase (Version 1 Updates)
 
-### **Books**  
-- `GET /api/books/?author=<name>`  
-  - Filter by author name (partial match).  
-- `GET /api/books/?publication_year=<year>`  
-  - Exact year.  
-- `GET /api/books/?publication_year__gte=<year>`  
-  - Books published after `<year>`.  
+### 🖼️ Relationships Diagram  
+Same as Version 0:  
+![Bookstore Diagram](images/bookstore_diagram.png)  
 
+### 🌐 Updated Endpoints  
+#### Authors  
+| Endpoint                | New Query Params       | Response Changes                     |  
+|-------------------------|------------------------|--------------------------------------|  
+| `/api/authors/`         | `?search=<name>`       | Paginated results                    |  
+| `/api/authors/<id>/`    | None                   | Includes nested `books` list         |  
+
+#### Books  
+| Endpoint                | New Query Params                | Response Changes      |  
+|-------------------------|---------------------------------|-----------------------|  
+| `/api/books/`           | `?author=<name>&year=<year>`    | Paginated results     |  
+
+### 📄 Response Examples  
+**Author Details (with nested books):**  
+```json
+{
+  "id": 1,
+  "name": "J.K. Rowling",
+  "books": [
+    {"id": 1, "title": "Harry Potter 1", "publication_year": 1997},
+    {"id": 2, "title": "Harry Potter 2", "publication_year": 1998}
+  ]
+}
+```
+
+## 🔍 Filtering Logic
+
+### **Authors**
+| Query Param       | Example                   | Description                              |
+|-------------------|---------------------------|------------------------------------------|
+| `?search=<name>`  | `?search=rowling`         | Case-insensitive partial name match.     |
+
+### **Books**
+| Query Param                     | Example                          | Description                              |
+|----------------------------------|----------------------------------|------------------------------------------|
+| `?author=<name>`                | `?author=rowling`               | Books by authors with "rowling" in name.|
+| `?publication_year=<year>`      | `?publication_year=2000`        | Books published in exact year.           |
+| `?publication_year__gte=<year>` | `?publication_year__gte=2000`   | Books published in/after 2000.           |
+| `?publication_year__lte=<year>` | `?publication_year__lte=2000`   | Books published in/before 2000.          |
+
+---
+
+## 📖 Pagination
+
+- **Default**: 10 items per page.
+- **Customize**: Add `?page_size=<number>` (e.g., `?page_size=5`).
+- **Response Format**:
+  ```json
+  {
+    "count": 45,
+    "next": "http://localhost:8000/api/books/?page=2",
+    "previous": null,
+    "results": [
+      // Paginated data here
+    ]
+  }
