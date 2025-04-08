@@ -1,4 +1,4 @@
-# 📚 BookStore Project
+# 📚 BookStore Project (Version 0)
 
 Welcome to the **BookStore API**! This project is a simple yet functional API built to manage authors and books. It supports CRUD operations (Create, Read, Update, Delete) for both entities, making it an excellent starting point for learning Django and Django Rest Framework (DRF).
 
