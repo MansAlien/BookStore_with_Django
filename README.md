@@ -1,66 +1,82 @@
-# 📚 BookStore Project (Version 0)
+# 📚 BookStore API (Version 1)
 
-Welcome to the **BookStore API**! This project is a simple yet functional API built to manage authors and books. It supports CRUD operations (Create, Read, Update, Delete) for both entities, making it an excellent starting point for learning Django and Django Rest Framework (DRF).
-
----
-
-## 1. Analysis Phase
-
-### 📝 Project Description
-This project involves creating a simple API for a bookstore. The API allows users to manage authors and books by performing basic **CRUD operations**:
-- **Create**: Add new authors or books.
-- **Read**: Retrieve details of authors or books.
-- **Update**: Modify existing authors or books.
-- **Delete**: Remove authors or books.
-
-### 🗄️ Models
-- **Author**: Represents an individual author.
-- **Book**: Represents a book, linked to an author (one author can have multiple books).
-
-### 📋 Requirements
-1. **Author**: Full CRUD support.
-2. **Book**: Full CRUD support.
-3. **Relationships**:
-   - Each book must be associated with **exactly one author**.
-   - An author can have **zero or more books**.
-4. **Fields**:
-   - **Author**: 
-     - `name` (string)
-   - **Book**: 
-     - `title` (string)
-     - `author` (foreign key to Author)
-     - `publication_year` (integer)
-5. **API Behavior**:
-   - Basic data validation (e.g., required fields must not be empty).
-6. **General Instructions**:
-   - No authentication or authorization required (can be added later).
-   - Use **JSON** for all requests and responses.
-   - Author names do not need to be unique; uniqueness is handled by IDs.
+A Django + DRF API for managing authors and books, now with **filtering, pagination, nested relationships, and Swagger docs**.  
 
 ---
 
-## 2. Design Phase
+## 🔥 Features  
+### **Core**  
+✅ **CRUD** for `Author` and `Book` models.  
+✅ **Relationships**: Each book belongs to one author; authors have many books.  
 
-### 🖼️ Bookstore Diagram
-Here’s a visual representation of the relationship between the Author and Book models:  
-![Bookstore Diagram](images/bookstore_diagram.png)  
+### **New in Version 1**  
+🔍 **Search & Filtering**  
+- Filter books by `author__name`, `publication_year` (exact/range).  
+- Filter authors by `name` (case-insensitive partial match).  
 
-### 🗄️ Models
-- **Author**:
-  - `id`: Primary key (auto-generated)
-  - `name`: CharField (max_length=255)
-- **Book**:
-  - `id`: Primary key (auto-generated)
-  - `title`: CharField (max_length=255)
-  - `publication_year`: IntegerField
-  - `author`: ForeignKey to Author (on_delete=CASCADE)
+📖 **Pagination**  
+- Default: `10 items per page` (customizable).  
 
-### 🌐 Endpoints Map
-The API provides the following endpoints for managing authors and books:
+🔄 **Nested Responses**  
+- Fetch an author with their books listed in the response.  
 
-| Endpoint                | HTTP Methods       | Description                           |
-|-------------------------|--------------------|---------------------------------------|
-| `/api/authors/`         | GET, POST          | List all authors or create a new one  |
-| `/api/authors/<int:pk>/`| GET, PUT, DELETE   | Retrieve, update, or delete an author |
-| `/api/books/`           | GET, POST          | List all books or create a new one    |
-| `/api/books/<int:pk>/`  | GET, PUT, DELETE   | Retrieve, update, or delete a book    |
+🛡️ **Validation**  
+- `publication_year` cannot be in the future.  
+- `title` must be ≥ 2 characters.  
+
+📜 **Swagger Documentation**  
+- Interactive API docs at `/swagger/`.  
+
+---
+
+## 🗄️ Models  
+### **Author**  
+| Field | Type      | Description          |  
+|-------|-----------|----------------------|  
+| `id`  | AutoField | Primary key.         |  
+| `name`| CharField | Author's full name.  |  
+
+### **Book**  
+| Field               | Type        | Description                         |  
+|---------------------|-------------|-------------------------------------|  
+| `id`                | AutoField   | Primary key.                        |  
+| `title`             | CharField   | Book title (≥ 2 chars).             |  
+| `author`            | ForeignKey  | Links to `Author` (on_delete=CASCADE). |  
+| `publication_year`  | IntegerField| Year (≤ current year).              |  
+
+---
+
+## 🌐 Endpoints  
+### **Authors**  
+| Endpoint                 | Method | Description                          |  
+|--------------------------|--------|--------------------------------------|  
+| `/api/authors/`          | GET    | List all authors (paginated).        |  
+| `/api/authors/`          | POST   | Create a new author.                 |  
+| `/api/authors/<id>/`     | GET    | Get author details + their books.    |  
+| `/api/authors/<id>/`     | PUT    | Update an author.                    |  
+| `/api/authors/<id>/`     | DELETE | Delete an author (and their books).  |  
+
+### **Books**  
+| Endpoint                 | Method | Description                          |  
+|--------------------------|--------|--------------------------------------|  
+| `/api/books/`            | GET    | List all books (paginated/filtered). |  
+| `/api/books/`            | POST   | Create a new book.                   |  
+| `/api/books/<id>/`       | GET    | Get book details.                    |  
+| `/api/books/<id>/`       | PUT    | Update a book.                       |  
+| `/api/books/<id>/`       | DELETE | Delete a book.                       |  
+
+---
+
+## 🔍 Filtering & Search  
+### **Authors**  
+- `GET /api/authors/?search=<name>`  
+  - Case-insensitive partial match on `name`.  
+
+### **Books**  
+- `GET /api/books/?author=<name>`  
+  - Filter by author name (partial match).  
+- `GET /api/books/?publication_year=<year>`  
+  - Exact year.  
+- `GET /api/books/?publication_year__gte=<year>`  
+  - Books published after `<year>`.  
+
